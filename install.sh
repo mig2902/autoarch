@@ -13,10 +13,10 @@ echo "";
 echo "autoarch";
 
 # boot partition size, in MB
-boot_partition_size=500
+#boot_partition_size=500
 
-# home partition size, in GB
-home_partition_size=40
+# root partition size, in GB
+root_partition_size=45
 
 # checks wheter there is multilib repo enabled properly or not
 IS_MULTILIB_REPO_DISABLED=$(cat /etc/pacman.conf | grep "#\[multilib\]" | wc -l)
@@ -46,40 +46,33 @@ pacman -S fzf --noconfirm
 selected_disk=$(sudo fdisk -l | grep 'Disk /dev/' | awk '{print $2,$3,$4}' | sed 's/,$//' | fzf | sed -e 's/\/dev\/\(.*\):/\1/' | awk '{print $1}')  
 
 # formatting disk for UEFI install
-echo "Formatting disk for UEFI install"
+echo "Formatting disk for MBR install"
 sed -e 's/\s*\([\+0-9a-zA-Z]*\).*/\1/' << EOF | fdisk /dev/${selected_disk}
-  g # gpt partitioning
+  o # mbr partition table
   n # new partition
     # default: primary partition
     # default: partition 1
-  +${boot_partition_size}M # mb on boot partition
+  +${root_partition_size}G # gb for root partition
     # default: yes if asked
   n # new partition
     # default: primary partition
     # default: partition 2
-  +${home_partition_size}G # gb for home partition
+    # default: all space left of for home partition
     # default: yes if asked
-  n # new partition
-    # default: primary partition
-    # default: partition 3
-    # default: all space left of for root partition
-    # default: yes if asked
-  t # change partition type
-  1 # selecting partition 1
-  1 # selecting EFI partition type
+  a # bootable flag partition
+    # default: partition 1
   w # writing changes to disk
 EOF
-
+  
 # outputting partition changes
 fdisk -l /dev/${selected_disk}
 
 # partition filesystem formatting
-yes | mkfs.fat -F32 /dev/${selected_disk}1
+yes | mkfs.ext4 /dev/${selected_disk}1
 yes | mkfs.ext4 /dev/${selected_disk}2
-yes | mkfs.ext4 /dev/${selected_disk}3
 
 # disk mount
-mount /dev/${selected_disk}3 /mnt
+mount /dev/${selected_disk}1 /mnt
 mkdir /mnt/boot
 mkdir /mnt/home
 mount /dev/${selected_disk}1 /mnt/boot
@@ -135,6 +128,8 @@ arch-chroot /mnt echo "LANG=es_ES.UTF-8" >> /mnt/etc/locale.conf
 
 # setting machine name
 arch-chroot /mnt echo "arch-laptop" >> /mnt/etc/hostname
+# Choose machine name
+#arch-chroot /mnt read -p "Choose your machine name (only one word):" machine_name
 
 # setting hosts file
 arch-chroot /mnt echo "127.0.0.1 localhost" >> /mnt/etc/hosts
@@ -234,10 +229,10 @@ arch-chroot /mnt sudo -u miguel /bin/zsh -c "sudo cp /home/miguel/fonts_tmp_fold
 arch-chroot /mnt sudo -u miguel rm -rf /home/miguel/fonts_tmp_folder
 
 # installing config files
-arch-chroot /mnt sudo -u miguel mkdir /home/miguel/Gitlab
-arch-chroot /mnt sudo -u miguel git clone https://gitlab.com/mig2902/autoarch.git /home/miguel/Gitlab/autoarch
-arch-chroot /mnt sudo -u miguel /bin/zsh -c "chmod 700 /home/miguel/Gitlab/autoarch/install_configs.sh"
-arch-chroot /mnt sudo -u miguel /bin/zsh -c "cd /home/miguel/Gitlab/autoarch && ./install_configs.sh"
+arch-chroot /mnt sudo -u miguel mkdir /home/miguel/GitHub
+arch-chroot /mnt sudo -u miguel git clone https://github.com/mig2902/autoarch.git /home/miguel/GitHub/autoarch
+arch-chroot /mnt sudo -u miguel /bin/zsh -c "chmod 700 /home/miguel/GitHub/autoarch/install_configs.sh"
+arch-chroot /mnt sudo -u miguel /bin/zsh -c "cd /home/miguel/GitHub/autoarch && ./install_configs.sh"
 
 # create folder for screenshots
 arch-chroot /mnt sudo -u miguel mkdir /home/miguel/Screenshots
