@@ -70,17 +70,15 @@ mount /dev/${selected_disk}2 /mnt/home
 pacstrap /mnt base base-devel vim networkmanager rofi feh linux linux-headers \
 os-prober efibootmgr ntfs-3g alacritty git zsh intel-ucode amd-ucode cpupower xf86-video-amdgpu vlc \
 xorg-server xorg-xinit ttf-dejavu ttf-liberation ttf-inconsolata noto-fonts \
-firefox geckodriver code xf86-video-intel zip unzip unrar obs-studio \
-pulseaudio pasystray pamixer telegram-desktop go python python-pip wget \
+chromium firefox geckodriver code xf86-video-intel zip unzip unrar obs-studio docker \
+pulseaudio pasystray pamixer telegram-desktop go python python-pip wget nginx mariadb \
 openssh xorg-xrandr noto-fonts-emoji maim imagemagick xclip pinta light ranger \
-ttf-roboto playerctl papirus-icon-theme hwloc p7zip hsetroot \
-nemo linux-firmware firewalld tree man glances otf-brass-mono fzf \
+ttf-roboto playerctl papirus-icon-theme hwloc p7zip hsetroot docker-compose \
+nemo linux-firmware firewalld tree man glances darktable fzf \
 mesa mesa-demos lib32-mesa vulkan-radeon lib32-vulkan-radeon libva-mesa-driver lib32-libva-mesa-driver \
 mesa-vdpau lib32-mesa-vdpau zsh-syntax-highlighting xdotool cronie dunst entr \
 xf86-video-nouveau xf86-video-vmware python-dbus httpie discord bind-tools \ 
 virtualbox python-pywal lutris i3lock dbeaver ccache
-
-# darktable docker docker-compose chromium nginx mariadb 
 
 # generating fstab
 genfstab -U /mnt >> /mnt/etc/fstab
@@ -159,7 +157,7 @@ arch-chroot /mnt echo "governor='performance'" >> /mnt/etc/default/cpupower
 # making services start at boot
 arch-chroot /mnt systemctl enable cpupower.service
 arch-chroot /mnt systemctl enable NetworkManager.service
-#arch-chroot /mnt systemctl enable docker.service
+arch-chroot /mnt systemctl enable docker.service
 arch-chroot /mnt systemctl enable firewalld.service
 arch-chroot /mnt systemctl enable cronie.service
 arch-chroot /mnt systemctl enable sshd.service
@@ -192,6 +190,7 @@ arch-chroot /mnt sudo -u miguel yay -S ctop-bin --noconfirm
 arch-chroot /mnt sudo -u miguel yay -S whatsapp-nativefier-dark --noconfirm
 arch-chroot /mnt sudo -u miguel yay -S simplenote-electron-bin --noconfirm
 arch-chroot /mnt sudo -u miguel yay -S picom-tryone-git --noconfirm
+arch-chroot /mnt sudo -u miguel yay -S otf-brass-mono --noconfirm
 
 # installing better font rendering packages
 arch-chroot /mnt sudo -u miguel /bin/zsh -c "yes | yay -S freetype2-infinality-remix fontconfig-infinality-remix cairo-infinality-remix"
