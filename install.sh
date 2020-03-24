@@ -1,10 +1,10 @@
 echo "autoarch";
 
 # boot partition size, in MB
-boot_partition_size=500
+#boot_partition_size=500
 
-# home partition size, in GB
-home_partition_size=40
+# root partition size, in GB
+root_partition_size=45
 
 # checks wheter there is multilib repo enabled properly or not
 IS_MULTILIB_REPO_DISABLED=$(cat /etc/pacman.conf | grep "#\[multilib\]" | wc -l)
@@ -34,58 +34,41 @@ pacman -S fzf --noconfirm
 selected_disk=$(sudo fdisk -l | grep 'Disk /dev/' | awk '{print $2,$3,$4}' | sed 's/,$//' | fzf | sed -e 's/\/dev\/\(.*\):/\1/' | awk '{print $1}')  
 
 # formatting disk for UEFI install
-echo "Formatting disk for UEFI install"
+echo "Formatting disk for MBR install"
 sed -e 's/\s*\([\+0-9a-zA-Z]*\).*/\1/' << EOF | fdisk /dev/${selected_disk}
-  g # gpt partitioning
+  o # mbr partition table
   n # new partition
     # default: primary partition
     # default: partition 1
-  +${boot_partition_size}M # mb on boot partition
+  +${root_partition_size}G # gb for root partition
     # default: yes if asked
   n # new partition
     # default: primary partition
     # default: partition 2
-  +${home_partition_size}G # gb for home partition
+    # default: all space left of for home partition
     # default: yes if asked
-  n # new partition
-    # default: primary partition
-    # default: partition 3
-    # default: all space left of for root partition
-    # default: yes if asked
-  t # change partition type
-  1 # selecting partition 1
-  1 # selecting EFI partition type
+  a # bootable flag partition
+    # default: partition 1
   w # writing changes to disk
 EOF
-
+  
 # outputting partition changes
 fdisk -l /dev/${selected_disk}
 
 # partition filesystem formatting
-yes | mkfs.fat -F32 /dev/${selected_disk}1
+yes | mkfs.ext4 /dev/${selected_disk}1
 yes | mkfs.ext4 /dev/${selected_disk}2
-yes | mkfs.ext4 /dev/${selected_disk}3
 
 # disk mount
-mount /dev/${selected_disk}3 /mnt
+mount /dev/${selected_disk}1 /mnt
 mkdir /mnt/boot
 mkdir /mnt/home
 mount /dev/${selected_disk}1 /mnt/boot
 mount /dev/${selected_disk}2 /mnt/home
 
 # pacstrap-ping desired disk
-pacstrap /mnt base base-devel vim networkmanager rofi feh linux linux-headers \
-os-prober efibootmgr ntfs-3g alacritty git zsh intel-ucode amd-ucode cpupower xf86-video-amdgpu vlc \
-xorg-server xorg-xinit ttf-dejavu ttf-liberation ttf-inconsolata noto-fonts \
-chromium firefox geckodriver code xf86-video-intel zip unzip unrar obs-studio docker \
-pulseaudio pasystray pamixer telegram-desktop go python python-pip wget nginx mariadb \
-openssh xorg-xrandr noto-fonts-emoji maim imagemagick xclip pinta light ranger \
-ttf-roboto playerctl papirus-icon-theme hwloc p7zip hsetroot docker-compose \
-nemo linux-firmware firewalld tree man glances darktable fzf \
-mesa mesa-demos lib32-mesa vulkan-radeon lib32-vulkan-radeon libva-mesa-driver lib32-libva-mesa-driver \
-mesa-vdpau lib32-mesa-vdpau zsh-syntax-highlighting xdotool cronie dunst entr \
-xf86-video-nouveau xf86-video-vmware python-dbus httpie discord bind-tools \ 
-virtualbox python-pywal lutris i3lock dbeaver ccache
+
+pacstrap /mnt base base-devel linux linux-firmware nano networkmanager bash-completion
 
 # generating fstab
 genfstab -U /mnt >> /mnt/etc/fstab
@@ -164,7 +147,7 @@ arch-chroot /mnt echo "governor='performance'" >> /mnt/etc/default/cpupower
 # making services start at boot
 arch-chroot /mnt systemctl enable cpupower.service
 arch-chroot /mnt systemctl enable NetworkManager.service
-arch-chroot /mnt systemctl enable docker.service
+#arch-chroot /mnt systemctl enable docker.service
 arch-chroot /mnt systemctl enable firewalld.service
 arch-chroot /mnt systemctl enable cronie.service
 arch-chroot /mnt systemctl enable sshd.service
@@ -197,7 +180,6 @@ arch-chroot /mnt sudo -u miguel yay -S ctop-bin --noconfirm
 arch-chroot /mnt sudo -u miguel yay -S whatsapp-nativefier-dark --noconfirm
 arch-chroot /mnt sudo -u miguel yay -S simplenote-electron-bin --noconfirm
 arch-chroot /mnt sudo -u miguel yay -S picom-tryone-git --noconfirm
-arch-chroot /mnt sudo -u miguel yay -S otf-brass-mono --noconfirm
 
 # installing better font rendering packages
 arch-chroot /mnt sudo -u miguel /bin/zsh -c "yes | yay -S freetype2-infinality-remix fontconfig-infinality-remix cairo-infinality-remix"
