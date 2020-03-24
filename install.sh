@@ -1,10 +1,10 @@
 echo "autoarch";
 
 # boot partition size, in MB
-#boot_partition_size=500
+boot_partition_size=500
 
-# root partition size, in GB
-root_partition_size=45
+# home partition size, in GB
+home_partition_size=40
 
 # checks wheter there is multilib repo enabled properly or not
 IS_MULTILIB_REPO_DISABLED=$(cat /etc/pacman.conf | grep "#\[multilib\]" | wc -l)
@@ -34,33 +34,40 @@ pacman -S fzf --noconfirm
 selected_disk=$(sudo fdisk -l | grep 'Disk /dev/' | awk '{print $2,$3,$4}' | sed 's/,$//' | fzf | sed -e 's/\/dev\/\(.*\):/\1/' | awk '{print $1}')  
 
 # formatting disk for UEFI install
-echo "Formatting disk for MBR install"
+echo "Formatting disk for UEFI install"
 sed -e 's/\s*\([\+0-9a-zA-Z]*\).*/\1/' << EOF | fdisk /dev/${selected_disk}
-  o # mbr partition table
+  g # gpt partitioning
   n # new partition
     # default: primary partition
     # default: partition 1
-  +${root_partition_size}G # gb for root partition
+  +${boot_partition_size}M # mb on boot partition
     # default: yes if asked
   n # new partition
     # default: primary partition
     # default: partition 2
-    # default: all space left of for home partition
+  +${home_partition_size}G # gb for home partition
     # default: yes if asked
-  a # bootable flag partition
-    # default: partition 1
+  n # new partition
+    # default: primary partition
+    # default: partition 3
+    # default: all space left of for root partition
+    # default: yes if asked
+  t # change partition type
+  1 # selecting partition 1
+  1 # selecting EFI partition type
   w # writing changes to disk
 EOF
-  
+
 # outputting partition changes
 fdisk -l /dev/${selected_disk}
 
 # partition filesystem formatting
-yes | mkfs.ext4 /dev/${selected_disk}1
+yes | mkfs.fat -F32 /dev/${selected_disk}1
 yes | mkfs.ext4 /dev/${selected_disk}2
+yes | mkfs.ext4 /dev/${selected_disk}3
 
 # disk mount
-mount /dev/${selected_disk}1 /mnt
+mount /dev/${selected_disk}3 /mnt
 mkdir /mnt/boot
 mkdir /mnt/home
 mount /dev/${selected_disk}1 /mnt/boot
