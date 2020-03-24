@@ -1,15 +1,3 @@
-echo "";
-echo "                              _       _        ";
-echo "       _ __ ___  _ __ ___ ___| |_ __ | | _____ ";
-echo "      | '_ \` _ \| '__/ __|_  / | '_ \| |/ / __|";
-echo "      | | | | | | | | (__ / /| | | | |   <\__ \\";
-echo "      |_| |_| |_|_|  \___/___|_|_| |_|_|\_\___/";
-echo "                                        ";
-echo "                                                       ";
-
-echo "     Easy-to-configure archlinux+i3 install script ";
-echo "        for maximum comfort and minimum hassles ";
-echo "";
 echo "autoarch";
 
 # boot partition size, in MB
