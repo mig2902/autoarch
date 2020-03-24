@@ -1,10 +1,10 @@
 echo "autoarch";
 
 # boot partition size, in MB
-#boot_partition_size=500
+boot_partition_size=500
 
-# root partition size, in GB
-root_partition_size=45
+# home partition size, in GB
+home_partition_size=40
 
 # checks wheter there is multilib repo enabled properly or not
 IS_MULTILIB_REPO_DISABLED=$(cat /etc/pacman.conf | grep "#\[multilib\]" | wc -l)
@@ -30,45 +30,90 @@ pacman -Syyy
 # adding fzf for making disk selection easier
 pacman -S fzf --noconfirm
 
+# open dialog for installation type
+install_type=$(printf 'UEFI installation (recommended)\nBIOS installation' | fzf | awk '{print $1}')
+
 # open dialog for disk selection
 selected_disk=$(sudo fdisk -l | grep 'Disk /dev/' | awk '{print $2,$3,$4}' | sed 's/,$//' | fzf | sed -e 's/\/dev\/\(.*\):/\1/' | awk '{print $1}')  
 
-# formatting disk for UEFI install
-echo "Formatting disk for MBR install"
-sed -e 's/\s*\([\+0-9a-zA-Z]*\).*/\1/' << EOF | fdisk /dev/${selected_disk}
-  o # mbr partition table
-  n # new partition
-    # default: primary partition
-    # default: partition 1
-  +${root_partition_size}G # gb for root partition
-    # default: yes if asked
-  n # new partition
-    # default: primary partition
-    # default: partition 2
-    # default: all space left of for home partition
-    # default: yes if asked
-  a # bootable flag partition
-    # default: partition 1
-  w # writing changes to disk
+if [ "${install_type}" == "UEFI" ]; then
+    # formatting disk for UEFI install type
+    echo "Formatting disk for UEFI install type"
+    sed -e 's/\s*\([\+0-9a-zA-Z]*\).*/\1/' << EOF | fdisk /dev/${selected_disk}
+      g # gpt partitioning
+      n # new partition
+        # default: primary partition
+        # default: partition 1
+      +${boot_partition_size}M # mb on boot partition
+        # default: yes if asked
+      n # new partition
+        # default: primary partition
+        # default: partition 2
+      +${home_partition_size}G # gb for home partition
+        # default: yes if asked
+      n # new partition
+        # default: primary partition
+        # default: partition 3
+        # default: all space left of for root partition
+        # default: yes if asked
+      t # change partition type
+      1 # selecting partition 1
+      1 # selecting EFI partition type
+      w # writing changes to disk
 EOF
-  
+else
+    # formatting disk for BIOS install type
+    echo "Formatting disk for BIOS install type"
+    sed -e 's/\s*\([\+0-9a-zA-Z]*\).*/\1/' << EOF | fdisk /dev/${selected_disk}
+      o # gpt partitioning
+      n # new partition
+        # default: primary partition
+        # default: partition 1
+        # default: select first default sector value
+      +${boot_partition_size}M # mb on boot partition
+        # default: yes if asked
+      n # new partition
+        # default: primary partition
+        # default: partition 2
+        # default: select second default sector value
+      +${home_partition_size}G # gb for home partition
+        # default: yes if asked
+      n # new partition
+        # default: primary partition
+        # default: partition 3
+        # default: all space left of for root partition
+        # default: yes if asked
+      w # writing changes to disk
+EOF
+fi
+
 # outputting partition changes
 fdisk -l /dev/${selected_disk}
 
 # partition filesystem formatting
-yes | mkfs.ext4 /dev/${selected_disk}1
+yes | mkfs.fat -F32 /dev/${selected_disk}1
 yes | mkfs.ext4 /dev/${selected_disk}2
+yes | mkfs.ext4 /dev/${selected_disk}3
 
 # disk mount
-mount /dev/${selected_disk}1 /mnt
+mount /dev/${selected_disk}3 /mnt
 mkdir /mnt/boot
 mkdir /mnt/home
 mount /dev/${selected_disk}1 /mnt/boot
 mount /dev/${selected_disk}2 /mnt/home
 
 # pacstrap-ping desired disk
-
-pacstrap /mnt base base-devel linux linux-firmware nano networkmanager bash-completion
+pacstrap /mnt base base-devel vim grub networkmanager rofi feh linux linux-headers \
+os-prober efibootmgr ntfs-3g alacritty git zsh intel-ucode cpupower xf86-video-amdgpu vlc \
+xorg-server xorg-xinit ttf-dejavu ttf-liberation ttf-inconsolata noto-fonts \
+chromium firefox code xf86-video-intel zip unzip unrar obs-studio docker \
+pulseaudio mate-media pamixer telegram-desktop go python python-pip wget \
+openssh xorg-xrandr noto-fonts-emoji maim imagemagick xclip pinta light ranger \
+ttf-roboto playerctl papirus-icon-theme hwloc p7zip picom hsetroot docker-compose \
+nemo linux-firmware firewalld tree man glances ttf-cascadia-code darktable fzf \
+mesa lib32-mesa vulkan-radeon lib32-vulkan-radeon libva-mesa-driver lib32-libva-mesa-driver \
+mesa-vdpau lib32-mesa-vdpau zsh-syntax-highlighting xdotool cronie dunst entr \
+xf86-video-nouveau xf86-video-vmware python-dbus httpie discord
 
 # generating fstab
 genfstab -U /mnt >> /mnt/etc/fstab
