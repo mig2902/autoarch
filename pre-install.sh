@@ -66,7 +66,7 @@ mount /dev/${selected_disk}1 /mnt/boot
 mount /dev/${selected_disk}2 /mnt/home
 
 echo ""
-echo -e "\e[1;42mPRE-INSTALLATION COMPLETE...\e[0m"
+echo -e "\e[1;42m>>> PRE-INSTALLATION COMPLETE...\e[0m"
 echo ""
 
 sleep 3
