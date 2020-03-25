@@ -2,7 +2,7 @@
 echo "autoarch";
 
 # disk
-selected_disk=/dev/sda
+selected_disk=sda
 
 # root partition size, in GB
 root_partition_size=45
