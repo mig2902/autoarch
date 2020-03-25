@@ -37,7 +37,7 @@ sed -e 's/\s*\([\+0-9a-zA-Z]*\).*/\1/' << EOF | fdisk /dev/${selected_disk}
   n # new partition
     # default: primary partition
     # default: partition 1
-  +${root_partition_size}G # gb for root partition
+  +${root_partition_size}G # gb on root partition
     # default: yes if asked
   n # new partition
     # default: primary partition
