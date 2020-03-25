@@ -66,7 +66,7 @@ else
     # formatting disk for BIOS install type
     echo "Formatting disk for BIOS install type"
     sed -e 's/\s*\([\+0-9a-zA-Z]*\).*/\1/' << EOF | fdisk /dev/${selected_disk}
-      o # gpt partitioning
+      o # mbr partitioning
       n # new partition
         # default: primary partition
         # default: partition 1
