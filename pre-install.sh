@@ -1,6 +1,9 @@
 
 echo "autoarch";
 
+# disk
+selected_disk=/dev/sda
+
 # root partition size, in GB
 root_partition_size=45
 
@@ -20,10 +23,7 @@ pacman -Syyy
 # adding fzf for making disk selection easier
 pacman -S fzf --noconfirm
 
-# open dialog for disk selection
-selected_disk=$(sudo fdisk -l | grep 'Disk /dev/' | awk '{print $2,$3,$4}' | sed 's/,$//' | fzf | sed -e 's/\/dev\/\(.*\):/\1/' | awk '{print $1}')  
-
-#echo "Formatting disk for BIOS install"
+# formatting disk for BIOS install
 echo "Formatting disk for BIOS install type"
 sed -e 's/\s*\([\+0-9a-zA-Z]*\).*/\1/' << EOF | fdisk /dev/${selected_disk}
   o # mbr partitioning
@@ -58,21 +58,27 @@ mount /dev/${selected_disk}1 /mnt/boot
 mount /dev/${selected_disk}2 /mnt/home
 
 echo ""
-echo -e "\e[1;42mPRE-INSTALLATION COMPLETE...\e[0m"
+echo -e "\e[1;42m>>>PRE-INSTALLATION COMPLETE...\e[0m"
 echo ""
 
-sleep 3
+sleep 5
 
 # Driver para Ati radeon y kernel linux-zen
 # pacstrap-ping desired disk
 pacstrap /mnt base base-devel vim grub networkmanager rofi feh linux-zen linux-headers \
 ntfs-3g alacritty git zsh intel-ucode cpupower xf86-video-ati xf86-video-amdgpu vlc \
 xorg-server xorg-xinit ttf-dejavu ttf-liberation ttf-inconsolata noto-fonts \
-firefox code xf86-video-intel zip unzip unrar obs-studio docker \
-pulseaudio mate-media pamixer telegram-desktop go python python-pip wget \
-openssh xorg-xrandr noto-fonts-emoji maim imagemagick xclip light ranger \
-ttf-roboto playerctl papirus-icon-theme hwloc p7zip picom hsetroot docker-compose \
-nemo linux-firmware firewalld tree man glances ttf-cascadia-code fzf \
-mesa lib32-mesa vulkan-radeon lib32-vulkan-radeon libva-mesa-driver lib32-libva-mesa-driver \
+firefox code zip unzip unrar \
+pulseaudio pamixer telegram-desktop python python-pip wget \
+openssh xorg-xrandr noto-fonts-emoji imagemagick xclip light ranger \
+ttf-roboto playerctl papirus-icon-theme hwloc p7zip picom hsetroot \
+nemo linux-firmware tree man ttf-cascadia-code fzf \
+mesa libva-mesa-driver \
 mesa-vdpau lib32-mesa-vdpau zsh-syntax-highlighting xdotool cronie dunst entr \
-xf86-video-nouveau xf86-video-vmware python-dbus httpie discord
+xf86-video-vmware python-dbus
+
+echo ""
+echo -e "\e[1;42m>>>PACSTRAP INSTALLATION COMPLETE...\e[0m"
+echo ""
+
+sleep 5
