@@ -36,9 +36,11 @@ arch-chroot /mnt sudo -u miguel git clone https://github.com/VundleVim/Vundle.vi
 # installing fonts
 arch-chroot /mnt sudo -u miguel mkdir /home/miguel/fonts_tmp_folder
 arch-chroot /mnt sudo -u miguel sudo mkdir /usr/share/fonts/OTF/
+
 # material icons
 arch-chroot /mnt sudo -u miguel /bin/zsh -c "cd /home/miguel/fonts_tmp_folder && wget -O materialicons.zip https://github.com/google/material-design-icons/releases/download/3.0.1/material-design-icons-3.0.1.zip && unzip materialicons.zip"
 arch-chroot /mnt sudo -u miguel /bin/zsh -c "sudo cp /home/miguel/fonts_tmp_folder/material-design-icons-3.0.1/iconfont/MaterialIcons-Regular.ttf /usr/share/fonts/TTF/"
+
 # removing fonts tmp folder
 arch-chroot /mnt sudo -u miguel rm -rf /home/miguel/fonts_tmp_folder
 
