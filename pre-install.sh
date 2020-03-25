@@ -29,9 +29,10 @@ pacman -Syyy
 pacman -S fzf --noconfirm
 
 # open dialog for disk selection
-selected_disk=$(sudo fdisk -l | grep 'Disk /dev/' | awk '{print $2,$3,$4}' | sed 's/,$//' | fzf | sed -e 's/\/dev\/\(.*\):/\1/' | awk '{print $1}')  
+selected_disk=$(printf 'Select disk installation:' sudo fdisk -l | grep 'Disk /dev/' | awk '{print $2,$3,$4}' | sed 's/,$//' | fzf | sed -e 's/\/dev\/\(.*\):/\1/' | awk '{print $1}')  
 
 #echo "Formatting disk for BIOS install"
+echo "Formatting disk for BIOS install type"
 sed -e 's/\s*\([\+0-9a-zA-Z]*\).*/\1/' << EOF | fdisk /dev/${selected_disk}
   o # mbr partitioning
   n # new partition
@@ -46,7 +47,7 @@ sed -e 's/\s*\([\+0-9a-zA-Z]*\).*/\1/' << EOF | fdisk /dev/${selected_disk}
     # default: all space left of for home partition
     # default: yes if asked
   a # select bootable partition
-    # default: partition 1
+  1 # select partition 1
   w # writing changes to disk
 EOF
 
@@ -65,6 +66,8 @@ mount /dev/${selected_disk}1 /mnt/boot
 mount /dev/${selected_disk}2 /mnt/home
 
 echo ""
+echo -e "\e[1;43mLight Blue Text\e[0m"
+echo -e "\e[1;30;43mYellow Underlined Text on Blue Background\e[0m"
 echo "PRE-INSTALLATION COMPLETE..."
 echo ""
 
