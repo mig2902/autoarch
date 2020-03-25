@@ -44,7 +44,8 @@ arch-chroot /mnt echo "127.0.1.1 arch-laptop.localdomain arch-laptop" >> /mnt/et
 arch-chroot /mnt sed -ie 's/# %wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) NOPASSWD: ALL/g' /etc/sudoers
 
 # make initframs
-arch-chroot /mnt mkinitcpio -p linux
+#arch-chroot /mnt mkinitcpio -p linux
+arch-chroot /mnt mkinitcpio -p linux-zen
 
 # setting root password
 arch-chroot /mnt sudo -u root /bin/zsh -c 'echo "Insert root password: " && read root_password && echo -e "$root_password\n$root_password" | passwd root'
@@ -55,5 +56,14 @@ arch-chroot /mnt useradd -m -G wheel -s /bin/zsh miguel
 # setting user miguel password
 arch-chroot /mnt sudo -u root /bin/zsh -c 'echo "Insert miguel password: " && read miguel_password && echo -e "$miguel_password\n$miguel_password" | passwd miguel'
 
+# UEFI
 # installing systemd-boot
-bootctl --path=/boot install
+#bootctl --path=/boot install
+
+# instalar grub
+#grub-install /dev/sda
+grub-install --root-directory=/mnt /dev/sda
+
+# actualizar grub
+arch-chroot /mnt /bin/bash
+grub-mkconfig -o /boot/grub/grub.cfg
