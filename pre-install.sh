@@ -80,12 +80,12 @@ sleep 5
 pacstrap /mnt base base-devel vim grub networkmanager rofi feh linux-zen linux-headers \
 ntfs-3g alacritty git zsh intel-ucode cpupower xf86-video-ati xf86-video-amdgpu vlc \
 xorg-server xorg-xinit ttf-dejavu ttf-liberation ttf-inconsolata noto-fonts \
-firefox code zip unzip unrar gvfs gvfs-mtp xdg-user-dirs\
+firefox code zip unzip unrar gvfs gvfs-mtp xdg-user-dirs \
 pulseaudio pamixer telegram-desktop python python-pip wget \
 openssh xorg-xrandr noto-fonts-emoji imagemagick xclip light ranger \
 ttf-roboto playerctl papirus-icon-theme hwloc p7zip picom hsetroot \
 nemo linux-firmware tree man ttf-cascadia-code fzf \
-mesa libva-mesa-driver netctl wpa_supplicant dialog xf86-input-synaptics\
+mesa libva-mesa-driver netctl wpa_supplicant dialog xf86-input-synaptics \
 mesa-vdpau zsh-syntax-highlighting xdotool cronie dunst entr \
 xf86-video-vmware python-dbus
 
