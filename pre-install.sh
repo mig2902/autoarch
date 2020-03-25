@@ -29,7 +29,7 @@ pacman -Syyy
 pacman -S fzf --noconfirm
 
 # open dialog for disk selection
-selected_disk=$(printf 'Select disk installation:' sudo fdisk -l | grep 'Disk /dev/' | awk '{print $2,$3,$4}' | sed 's/,$//' | fzf | sed -e 's/\/dev\/\(.*\):/\1/' | awk '{print $1}')  
+selected_disk=$(sudo fdisk -l | grep 'Disk /dev/' | awk '{print $2,$3,$4}' | sed 's/,$//' | fzf | sed -e 's/\/dev\/\(.*\):/\1/' | awk '{print $1}')  
 
 #echo "Formatting disk for BIOS install"
 echo "Formatting disk for BIOS install type"
