@@ -4,19 +4,11 @@ echo "autoarch";
 # root partition size, in GB
 root_partition_size=45
 
-# checks wheter there is multilib repo enabled properly or not
-IS_MULTILIB_REPO_DISABLED=$(cat /etc/pacman.conf | grep "#\[multilib\]" | wc -l)
-if [ "$IS_MULTILIB_REPO_DISABLED" == "1" ]
-then
-    echo "You need to enable [multilib] repository inside /etc/pacman.conf file before running this script, aborting installation"
-    exit -1
-fi
-echo "[multilib] repo correctly enabled, continuing"
+
 
 # syncing system datetime
 timedatectl set-ntp true
 
-## Se puede usar reflector al finalizar la instalacion o buscar por velocidad
 # getting latest mirrors for france and germany
 wget -O mirrorlist "https://www.archlinux.org/mirrorlist/?country=FR&country=DE&protocol=https&ip_version=4"
 sed -ie 's/^.//g' ./mirrorlist
