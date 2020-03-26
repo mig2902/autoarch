@@ -12,18 +12,9 @@
 # changing governor to performance
 arch-chroot /mnt echo "governor='performance'" >> /mnt/etc/default/cpupower
 
-# making services start at boot
-arch-chroot /mnt systemctl enable cpupower.service
-arch-chroot /mnt systemctl enable NetworkManager.service
-#arch-chroot /mnt systemctl enable docker.service
-arch-chroot /mnt systemctl enable firewalld.service
-arch-chroot /mnt systemctl enable cronie.service
-arch-chroot /mnt systemctl enable sshd.service
+
 
 # enabling and starting DNS resolver via systemd-resolved
 arch-chroot /mnt systemctl enable systemd-resolved.service
 arch-chroot /mnt systemctl start systemd-resolved.service
 
-# making i3 default for startx for both root and miguel
-arch-chroot /mnt echo "exec i3" >> /mnt/root/.xinitrc
-arch-chroot /mnt echo "exec i3" >> /mnt/home/miguel/.xinitrc
