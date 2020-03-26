@@ -168,20 +168,20 @@ arch-chroot /mnt sed -ie 's/# %wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) NO
 arch-chroot /mnt mkinitcpio -p linux-zen
 
 # setting root password
-arch-chroot /mnt sudo -u root /bin/zsh -c 'echo "Insert root password: " && read root_password && echo -e "$root_password\n$root_password" | passwd root'
+arch-chroot /mnt sudo -u root /bin/bash -c 'echo "Insert root password: " && read root_password && echo -e "$root_password\n$root_password" | passwd root'
 
 # making user miguel
-arch-chroot /mnt useradd -m -G wheel -s /bin/zsh miguel
+arch-chroot /mnt useradd -m -G wheel -s /bin/bash miguel
 
 # setting user miguel password
-arch-chroot /mnt sudo -u root /bin/zsh -c 'echo "Insert miguel password: " && read miguel_password && echo -e "$miguel_password\n$miguel_password" | passwd miguel'
+arch-chroot /mnt sudo -u root /bin/bash -c 'echo "Insert miguel password: " && read miguel_password && echo -e "$miguel_password\n$miguel_password" | passwd miguel'
 
 # instalar grub
-grub-install /dev/sda
-#grub-install --root-directory=/mnt /dev/sda
+#grub-install /dev/sda
+grub-install --root-directory=/mnt /dev/sda
 
 # actualizar grub
-#arch-chroot /mnt /bin/bash
+arch-chroot /mnt /bin/bash
 grub-mkconfig -o /boot/grub/grub.cfg
 
 
@@ -204,7 +204,7 @@ sleep 5
 # Para instalar paquetes AUR
 # installing yay
 arch-chroot /mnt sudo -u miguel git clone https://aur.archlinux.org/yay.git /home/miguel/yay_tmp_install
-arch-chroot /mnt sudo -u miguel /bin/zsh -c "cd /home/miguel/yay_tmp_install && yes | makepkg -si"
+arch-chroot /mnt sudo -u miguel /bin/bash -c "cd /home/miguel/yay_tmp_install && yes | makepkg -si"
 arch-chroot /mnt rm -rf /home/miguel/yay_tmp_install
 
 # adding makepkg optimizations
@@ -220,7 +220,7 @@ arch-chroot /mnt sudo -u miguel yay -S simplenote-electron-bin --noconfirm
 #arch-chroot /mnt sudo -u miguel yay -S picom-tryone-git --noconfirm
 
 # installing better font rendering packages
-arch-chroot /mnt sudo -u miguel /bin/zsh -c "yes | yay -S freetype2-infinality-remix fontconfig-infinality-remix cairo-infinality-remix"
+arch-chroot /mnt sudo -u miguel /bin/bash -c "yes | yay -S freetype2-infinality-remix fontconfig-infinality-remix cairo-infinality-remix"
 
 # installing vundle
 arch-chroot /mnt sudo -u miguel mkdir /home/miguel/.vim
@@ -228,8 +228,8 @@ arch-chroot /mnt sudo -u miguel mkdir /home/miguel/.vim/bundle
 arch-chroot /mnt sudo -u miguel git clone https://github.com/VundleVim/Vundle.vim.git /home/miguel/.vim/bundle/Vundle.vim
 
 # material icons
-arch-chroot /mnt sudo -u miguel /bin/zsh -c "cd /home/miguel/fonts_tmp_folder && wget -O materialicons.zip https://github.com/google/material-design-icons/releases/download/3.0.1/material-design-icons-3.0.1.zip && unzip materialicons.zip"
-arch-chroot /mnt sudo -u miguel /bin/zsh -c "sudo cp /home/miguel/fonts_tmp_folder/material-design-icons-3.0.1/iconfont/MaterialIcons-Regular.ttf /usr/share/fonts/TTF/"
+arch-chroot /mnt sudo -u miguel /bin/bash -c "cd /home/miguel/fonts_tmp_folder && wget -O materialicons.zip https://github.com/google/material-design-icons/releases/download/3.0.1/material-design-icons-3.0.1.zip && unzip materialicons.zip"
+arch-chroot /mnt sudo -u miguel /bin/bash -c "sudo cp /home/miguel/fonts_tmp_folder/material-design-icons-3.0.1/iconfont/MaterialIcons-Regular.ttf /usr/share/fonts/TTF/"
 
 # installing fonts
 arch-chroot /mnt sudo -u miguel mkdir /home/miguel/fonts_tmp_folder
