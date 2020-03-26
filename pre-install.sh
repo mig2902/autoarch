@@ -270,7 +270,7 @@ echo ""
 
 sleep 5
 
-reboot
+#reboot
 
 
 
