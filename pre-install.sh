@@ -12,6 +12,8 @@ echo "";
 echo "     						  Archlinux + i3 install script ";
 echo "";
 
+# https://bit.ly/3btbIMD
+
 # disk
 selected_disk=sda
 
