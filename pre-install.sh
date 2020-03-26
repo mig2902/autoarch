@@ -1,17 +1,17 @@
 echo "";
 echo "";
-echo "  /$$$$$$              /$$                          /$$$$$$                      /$$";      
-echo " /$$__  $$            | $$                  /$$    /$$__  $$                    | $$";      
-echo "| $$  \ $$ /$$   /$$ /$$$$$$    /$$$$$$    | $$   | $$  \ $$  /$$$$$$   /$$$$$$$| $$$$$$$"; 
+echo "  /$$$$$$              /$$                          /$$$$$$                      /$$";
+echo " /$$__  $$            | $$                  /$$    /$$__  $$                    | $$";
+echo "| $$  \ $$ /$$   /$$ /$$$$$$    /$$$$$$    | $$   | $$  \ $$  /$$$$$$   /$$$$$$$| $$$$$$$";
 echo "| $$$$$$$$| $$  | $$|_  $$_/   /$$__  $$ /$$$$$$$$| $$$$$$$$ /$$__  $$ /$$_____/| $$__  $$";
 echo "| $$__  $$| $$  | $$  | $$    | $$  \ $$|__  $$__/| $$__  $$| $$  \__/| $$      | $$  \ $$";
 echo "| $$  | $$| $$  | $$  | $$ /$$| $$  | $$   | $$   | $$  | $$| $$      | $$      | $$  | $$";
 echo "| $$  | $$|  $$$$$$/  |  $$$$/|  $$$$$$/   |__/   | $$  | $$| $$      |  $$$$$$$| $$  | $$";
 echo "|__/  |__/ \______/    \___/   \______/           |__/  |__/|__/       \_______/|__/  |__/";
-echo "";                                                                                     
+echo "";
 echo "     						  Archlinux + i3 install script ";
-echo "";                                                                                     
-                                                                                      
+echo "";
+
 # disk
 selected_disk=sda
 
@@ -30,7 +30,7 @@ THEMES="papirus-icon-theme"
 SECURITY="rsync gnupg"
 SCIENCE=""
 OTHERS="tmux"
-DEVELOPER="code python"
+DEVELOPER="code python go"
 CUSTOM=""
 
 # hostname
@@ -103,7 +103,7 @@ sleep 5
 # pacstrap-ping desired disk
 pacstrap /mnt ${BASE} ${DRIVERS} ${INTERNET} ${MULTIMEDIA} ${UTILITIES} \
 #${DOCUMENTS AND TEXT} ${FONTS} ${THEMES} ${SECURITY} ${SCIENCE} ${OTHERS} ${DEVELOPER}
- 
+
 echo ""
 echo -e "\e[1;42m>>> PACSTRAP INSTALLATION COMPLETE...\e[0m"
 echo ""
@@ -271,6 +271,3 @@ echo ""
 sleep 5
 
 #reboot
-
-
-
