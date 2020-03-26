@@ -209,7 +209,7 @@ sleep 5
 
 # Para instalar paquetes AUR
 # installing yay
-arch-chroot /mnt sudo -u miguel git clone https://aur.archlinux.org/yay.git /home/miguel/yay_tmp_install
+arch-chroot /mnt sudo -u miguel git clone https://aur.archlinux.org/yay-git.git /home/miguel/yay_tmp_install
 arch-chroot /mnt sudo -u miguel /bin/bash -c "cd /home/miguel/yay_tmp_install && yes | makepkg -si"
 arch-chroot /mnt rm -rf /home/miguel/yay_tmp_install
 
@@ -243,6 +243,12 @@ arch-chroot /mnt sudo -u miguel sudo mkdir /usr/share/fonts/OTF/
 
 # removing fonts tmp folder
 arch-chroot /mnt sudo -u miguel rm -rf /home/miguel/fonts_tmp_folder
+
+# installing config files
+arch-chroot /mnt sudo -u miguel mkdir /home/miguel/GitHub
+arch-chroot /mnt sudo -u miguel git clone https://github.com/mig2902/autoarch.git /home/miguel/GitHub/autoarch
+arch-chroot /mnt sudo -u miguel /bin/bash -c "chmod 700 /home/miguel/GitHub/autoarch/install_configs.sh"
+arch-chroot /mnt sudo -u miguel /bin/bash -c "cd /home/miguel/GitHub/autoarch && ./install_configs.sh"
 
 echo ""
 echo -e "\e[1;42m>>> AUR PACKAGES INSTALLATION COMPLETE...\e[0m"
