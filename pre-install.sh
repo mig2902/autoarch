@@ -21,7 +21,7 @@ root_partition_size=45
 # pacstrap packages
 BASE="base base-devel grub networkmanager linux-zen linux-headers linux-firmware xorg-server xorg-xinit xdg-user-dirs xorg-xrandr fzf intel-ucode cpupower"
 DRIVERS="xf86-video-ati xf86-video-amdgpu mesa libva-mesa-driver mesa-vdpau xf86-input-synaptics"
-INTERNET="firefox curl wget netctl wpa supplicant openssh transmission-gtk transmission-qt telegram-desktop"
+INTERNET="firefox curl wget netctl wpa_supplicant openssh transmission-gtk transmission-qt telegram-desktop"
 MULTIMEDIA="imagemagick vlc ffmpeg pulseaudio pamixer feh playerctl"
 UTILITIES="ntfs-3g exfat-utils zip unzip unrar p7zip gvfs gvfs-mtp tree man rofi alacritty hwloc xdotool dunst hsetroot picom dialog"
 DOCUMENTS_AND_TEXT="libreoffice-fresh vim xclip ranger"
@@ -139,7 +139,7 @@ arch-chroot /mnt echo KEYMAP=es > /etc/vconsole.conf
 # setting hosts file
 arch-chroot /mnt echo "127.0.0.1 localhost" >> /mnt/etc/hosts
 arch-chroot /mnt echo "::1 localhost" >> /mnt/etc/hosts
-arch-chroot /mnt echo "127.0.1.1 arch-laptop.localdomain arch-laptop" >> /mnt/etc/hosts
+arch-chroot /mnt echo "127.0.1.1 ${hostname}.localdomain ${hostname}" >> /mnt/etc/hosts
 
 # enabling font presets for better font rendering
 arch-chroot /mnt ln -s /etc/fonts/conf.avail/70-no-bitmaps.conf /etc/fonts/conf.d
@@ -151,3 +151,58 @@ echo -e "\e[1;42m>>> BASE SYSTEM SETTINGS COMPLETE...\e[0m"
 echo ""
 
 sleep 5
+
+
+
+
+
+# making sudoers do sudo stuff without requiring password typing
+arch-chroot /mnt sed -ie 's/# %wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) NOPASSWD: ALL/g' /etc/sudoers
+
+# make initframs
+#arch-chroot /mnt mkinitcpio -p linux
+arch-chroot /mnt mkinitcpio -p linux-zen
+
+# setting root password
+arch-chroot /mnt sudo -u root /bin/zsh -c 'echo "Insert root password: " && read root_password && echo -e "$root_password\n$root_password" | passwd root'
+
+# making user miguel
+arch-chroot /mnt useradd -m -G wheel -s /bin/zsh miguel
+
+# setting user miguel password
+arch-chroot /mnt sudo -u root /bin/zsh -c 'echo "Insert miguel password: " && read miguel_password && echo -e "$miguel_password\n$miguel_password" | passwd miguel'
+
+# instalar grub
+grub-install /dev/sda
+#grub-install --root-directory=/mnt /dev/sda
+
+# actualizar grub
+#arch-chroot /mnt /bin/bash
+grub-mkconfig -o /boot/grub/grub.cfg
+
+
+# making services start at boot
+arch-chroot /mnt systemctl enable cpupower.service
+arch-chroot /mnt systemctl enable NetworkManager.service
+
+
+# making i3 default for startx for both root and miguel
+arch-chroot /mnt echo "exec i3" >> /mnt/root/.xinitrc
+arch-chroot /mnt echo "exec i3" >> /mnt/home/miguel/.xinitrc
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
