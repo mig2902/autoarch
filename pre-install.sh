@@ -19,7 +19,7 @@ selected_disk=sda
 root_partition_size=45
 
 # pacstrap packages
-BASE="base base-devel grub networkmanager linux-zen linux-headers linux-firmware xorg-server xorg-xinit xdg-user-dirs xorg-xrandr fzf intel-ucode cpupower"
+BASE="base base-devel grub networkmanager linux-zen linux-headers linux-firmware git xorg-server xorg-xinit xdg-user-dirs xorg-xrandr fzf intel-ucode cpupower"
 DRIVERS="xf86-video-ati xf86-video-amdgpu mesa libva-mesa-driver mesa-vdpau xf86-input-synaptics"
 INTERNET="firefox curl wget netctl wpa_supplicant openssh transmission-gtk transmission-qt telegram-desktop"
 MULTIMEDIA="imagemagick vlc ffmpeg pulseaudio pamixer feh playerctl"
@@ -30,7 +30,7 @@ THEMES="papirus-icon-theme"
 SECURITY="rsync gnupg"
 SCIENCE=""
 OTHERS="tmux"
-DEVELOPER="code python git"
+DEVELOPER="code python"
 CUSTOM=""
 
 # hostname
