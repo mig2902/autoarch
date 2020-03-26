@@ -36,6 +36,9 @@ CUSTOM=""
 # hostname
 hostname=arch-dell
 
+ROOT_PASSWORD="test" # Main root password. Warning: change it!
+USER_PASSWORD="test" # Main user password. Warning: change it!
+
 echo ""
 echo -e "\e[1;42m>>> START INSTALLATION...\e[0m"
 echo ""
@@ -170,6 +173,9 @@ arch-chroot /mnt mkinitcpio -p linux-zen
 # setting root password
 arch-chroot /mnt sudo -u root /bin/bash -c 'echo "Insert root password: " && read root_password && echo -e "$root_password\n$root_password" | passwd root'
 
+
+
+
 # making user miguel
 arch-chroot /mnt useradd -m -G wheel -s /bin/bash miguel
 
@@ -178,11 +184,11 @@ arch-chroot /mnt sudo -u root /bin/bash -c 'echo "Insert miguel password: " && r
 
 # instalar grub
 #grub-install /dev/sda
-grub-install --root-directory=/mnt /dev/sda
+arch-chroot /mnt grub-install --root-directory=/mnt /dev/sda
 
 # actualizar grub
 arch-chroot /mnt /bin/bash
-grub-mkconfig -o /boot/grub/grub.cfg
+arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
 
 
 # making services start at boot
