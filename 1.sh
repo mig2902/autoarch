@@ -1,11 +1,11 @@
 echo "";
-echo " █████╗ ██╗   ██╗████████╗ ██████╗        █████╗ ██████╗  ██████╗██╗  ██╗";
-echo "██╔══██╗██║   ██║╚══██╔══╝██╔═══██╗      ██╔══██╗██╔══██╗██╔════╝██║  ██║";
-echo "███████║██║   ██║   ██║   ██║   ██║█████╗███████║██████╔╝██║     ███████║";
-echo "██╔══██║██║   ██║   ██║   ██║   ██║╚════╝██╔══██║██╔══██╗██║     ██╔══██║";
-echo "██║  ██║╚██████╔╝   ██║   ╚██████╔╝      ██║  ██║██║  ██║╚██████╗██║  ██║";
-echo "╚═╝  ╚═╝ ╚═════╝    ╚═╝    ╚═════╝       ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝";
-echo "                      Archlinux + i3 install script ";
+echo "  █████╗ ██╗   ██╗████████╗ ██████╗        █████╗ ██████╗  ██████╗██╗  ██╗";
+echo " ██╔══██╗██║   ██║╚══██╔══╝██╔═══██╗      ██╔══██╗██╔══██╗██╔════╝██║  ██║";
+echo " ███████║██║   ██║   ██║   ██║   ██║█████╗███████║██████╔╝██║     ███████║";
+echo " ██╔══██║██║   ██║   ██║   ██║   ██║╚════╝██╔══██║██╔══██╗██║     ██╔══██║";
+echo " ██║  ██║╚██████╔╝   ██║   ╚██████╔╝      ██║  ██║██║  ██║╚██████╗██║  ██║";
+echo " ╚═╝  ╚═╝ ╚═════╝    ╚═╝    ╚═════╝       ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝";
+echo "                       Archlinux + i3 install script ";
 
 
 # disk
@@ -13,20 +13,20 @@ selected_disk=sda
 
 # partition size, in GB (boot in MB)
 boot_partition=512
-root_partition_size=45
+root_partition_size=6
 swap_partition_size=1
 
 echo ""
 echo -e "\e[1;42m>>> START INSTALLATION...\e[0m"
 echo ""
-sleep 5
+sleep 3
 
 # Syncing system datetime
 timedatectl set-ntp true
 
 # Reflector is a script which can retrieve the latest mirror list from the MirrorStatus page,
 # filter the most up-to-date mirrors, sort them by speed and overwrite the file /etc/pacman.d/mirrorlist.
-sudo pacman -S reflector
+sudo pacman -S reflector --noconfirm
 
 # Back up the existing /etc/pacman.d/mirrorlist:
 cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup
