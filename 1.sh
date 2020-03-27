@@ -1,18 +1,18 @@
 echo "";
-echo "  █████╗ ██╗   ██╗████████╗ ██████╗        █████╗ ██████╗  ██████╗██╗  ██╗";
-echo " ██╔══██╗██║   ██║╚══██╔══╝██╔═══██╗      ██╔══██╗██╔══██╗██╔════╝██║  ██║";
-echo " ███████║██║   ██║   ██║   ██║   ██║█████╗███████║██████╔╝██║     ███████║";
-echo " ██╔══██║██║   ██║   ██║   ██║   ██║╚════╝██╔══██║██╔══██╗██║     ██╔══██║";
-echo " ██║  ██║╚██████╔╝   ██║   ╚██████╔╝      ██║  ██║██║  ██║╚██████╗██║  ██║";
-echo " ╚═╝  ╚═╝ ╚═════╝    ╚═╝    ╚═════╝       ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝";
-echo "                       Archlinux + i3 install script ";
+echo "   █████╗ ██╗   ██╗████████╗ ██████╗        █████╗ ██████╗  ██████╗██╗  ██╗";
+echo "  ██╔══██╗██║   ██║╚══██╔══╝██╔═══██╗      ██╔══██╗██╔══██╗██╔════╝██║  ██║";
+echo "  ███████║██║   ██║   ██║   ██║   ██║█████╗███████║██████╔╝██║     ███████║";
+echo "  ██╔══██║██║   ██║   ██║   ██║   ██║╚════╝██╔══██║██╔══██╗██║     ██╔══██║";
+echo "  ██║  ██║╚██████╔╝   ██║   ╚██████╔╝      ██║  ██║██║  ██║╚██████╗██║  ██║";
+echo "  ╚═╝  ╚═╝ ╚═════╝    ╚═╝    ╚═════╝       ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝";
+echo "                        Archlinux + i3 install script ";
 
 
 # disk
 selected_disk=sda
 
 # partition size, in GB (boot in MB)
-boot_partition=512
+boot_partition_size=512
 root_partition_size=6
 swap_partition_size=1
 
@@ -26,7 +26,7 @@ timedatectl set-ntp true
 
 # Reflector is a script which can retrieve the latest mirror list from the MirrorStatus page,
 # filter the most up-to-date mirrors, sort them by speed and overwrite the file /etc/pacman.d/mirrorlist.
-sudo pacman -S reflector --noconfirm
+pacman -S reflector --noconfirm
 
 # Back up the existing /etc/pacman.d/mirrorlist:
 cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup
@@ -50,7 +50,7 @@ sed -e 's/\s*\([\+0-9a-zA-Z]*\).*/\1/' << EOF | fdisk /dev/${selected_disk}
     # default: partition 1
     # default: yes if asked
   +${boot_partition_size}M # mb for boot partition
-    # default: yes if asked
+  y # default: yes if asked
 
   n # new partition
     # default: primary partition
