@@ -1,25 +1,31 @@
 echo "";
-echo "   █████╗ ██╗   ██╗████████╗ ██████╗        █████╗ ██████╗  ██████╗██╗  ██╗";
-echo "  ██╔══██╗██║   ██║╚══██╔══╝██╔═══██╗      ██╔══██╗██╔══██╗██╔════╝██║  ██║";
-echo "  ███████║██║   ██║   ██║   ██║   ██║█████╗███████║██████╔╝██║     ███████║";
-echo "  ██╔══██║██║   ██║   ██║   ██║   ██║╚════╝██╔══██║██╔══██╗██║     ██╔══██║";
-echo "  ██║  ██║╚██████╔╝   ██║   ╚██████╔╝      ██║  ██║██║  ██║╚██████╗██║  ██║";
-echo "  ╚═╝  ╚═╝ ╚═════╝    ╚═╝    ╚═════╝       ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝";
+echo "   █████╗ ██╗   ██╗████████╗ ██████╗          █████╗ ██████╗  ██████╗██╗  ██╗";
+echo "  ██╔══██╗██║   ██║╚══██╔══╝██╔═══██╗        ██╔══██╗██╔══██╗██╔════╝██║  ██║";
+echo "  ███████║██║   ██║   ██║   ██║   ██║ █████╗ ███████║██████╔╝██║     ███████║";
+echo "  ██╔══██║██║   ██║   ██║   ██║   ██║ ╚════╝ ██╔══██║██╔══██╗██║     ██╔══██║";
+echo "  ██║  ██║╚██████╔╝   ██║   ╚██████╔╝        ██║  ██║██║  ██║╚██████╗██║  ██║";
+echo "  ╚═╝  ╚═╝ ╚═════╝    ╚═╝    ╚═════╝         ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝";
 echo "                        Archlinux + i3 install script ";
 
 
-# disk
-selected_disk=sda
+# Disk
+selected_disk=/dev/sda
 
-# partition size, in GB (boot in MB)
+# Partition size, in GB (boot in MB)
 boot_partition_size=512
 root_partition_size=6
 swap_partition_size=1
 
-# hostname
+# Varia
 hostname=arch-dell
+default_user=miguel
+default_passwd=test
+kernel=linux-zen
+user_groups=audio,lp,optical,storage,video,wheel,games,power,scanner
+shell=/bin/bash
+wm=i3
 
-# pacstrap packages
+# Pacstrap packages
 BASE="base base-devel grub networkmanager linux-zen linux-headers linux-firmware git xorg-server xorg-xinit xdg-user-dirs xorg-xrandr fzf intel-ucode cpupower"
 DRIVERS="xf86-video-ati xf86-video-amdgpu mesa libva-mesa-driver mesa-vdpau xf86-input-synaptics"
 INTERNET="firefox curl wget netctl wpa_supplicant openssh transmission-gtk transmission-qt telegram-desktop"
@@ -62,7 +68,7 @@ pacman -S fzf --noconfirm
 
 # Formatting disk for BIOS system
 echo "Formatting disk for BIOS install type"
-sed -e 's/\s*\([\+0-9a-zA-Z]*\).*/\1/' << EOF | fdisk /dev/${selected_disk}
+sed -e 's/\s*\([\+0-9a-zA-Z]*\).*/\1/' << EOF | fdisk ${selected_disk}
   o # mbr partitioning
   n # new partition
     # default: primary partition
@@ -99,21 +105,21 @@ sed -e 's/\s*\([\+0-9a-zA-Z]*\).*/\1/' << EOF | fdisk /dev/${selected_disk}
 EOF
 
 # Outputting partition changes
-fdisk -l /dev/${selected_disk}
+fdisk -l ${selected_disk}
 
 # Partition filesystem formatting
-yes | mkfs.ext2 /dev/${selected_disk}1
-yes | mkfs.ext4 /dev/${selected_disk}2
-yes | mkfswap /dev/${selected_disk}3
-yes | swapon /dev/${selected_disk}3
-yes | mkfs.ext4 /dev/${selected_disk}4
+yes | mkfs.ext2 ${selected_disk}1
+yes | mkfs.ext4 ${selected_disk}2
+yes | mkfswap ${selected_disk}3
+yes | swapon ${selected_disk}3
+yes | mkfs.ext4 ${selected_disk}4
 
 # Disk mount
-mount /dev/${selected_disk}2 /mnt
+mount ${selected_disk}2 /mnt
 mkdir /mnt/boot
 mkdir /mnt/home
-mount /dev/${selected_disk}1 /mnt/boot
-mount /dev/${selected_disk}4 /mnt/home
+mount ${selected_disk}1 /mnt/boot
+mount ${selected_disk}4 /mnt/home
 
 echo ""
 echo -e "\e[1;42m>>> PRE-INSTALLATION COMPLETE...\e[0m"
