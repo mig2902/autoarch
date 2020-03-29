@@ -1,3 +1,5 @@
+set -e
+
 default_user=miguel
 default_passwd=test
 kernel=linux-zen
@@ -17,6 +19,23 @@ arch-chroot /mnt sed -ie 's/# %wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) NO
 
 # Make initframs
 arch-chroot /mnt mkinitcpio -p ${kernel}
+
+
+
+# setting root password
+arch-chroot /mnt sudo -u root ${shell} -c 'echo "Insert root password: " && read root_password && echo -e "$root_password\n$root_password" | passwd root'
+
+# making user miguel
+arch-chroot /mnt useradd -m -G wheel -s ${shell} miguel
+
+# setting user miguel password
+arch-chroot /mnt sudo -u root ${shell} -c 'echo "Insert miguel password: " && read miguel_password && echo -e "$miguel_password\n$miguel_password" | passwd miguel'
+
+
+
+
+
+
 
 # Setting root password
 arch-chroot /mnt sudo -u root ${shell} -c echo -e "${default_passwd}\n${default_passwd}" | passwd

@@ -1,3 +1,5 @@
+set -e
+
 # hostname
 hostname=arch-dell
 
